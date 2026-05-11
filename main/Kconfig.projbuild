@@ -194,6 +194,9 @@ choice BOARD_TYPE
     config BOARD_TYPE_KEVIN_C3
         bool "Kevin C3"
         depends on IDF_TARGET_ESP32C3
+    config BOARD_TYPE_SLIM_C3_4M
+        bool "Slim C3 4MB (无屏精简版)"
+        depends on IDF_TARGET_ESP32C3
     config BOARD_TYPE_KEVIN_SP_V3_DEV
         bool "Kevin SP V3"
         depends on IDF_TARGET_ESP32S3
