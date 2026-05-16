@@ -2,6 +2,7 @@
 #include "codecs/no_audio_codec.h"
 #include "application.h"
 #include "button.h"
+#include "led/single_led.h"
 #include "config.h"
 
 #include <esp_log.h>
@@ -45,6 +46,11 @@ public:
             MIC_I2S_GPIO_SCK, MIC_I2S_GPIO_WS, MIC_I2S_GPIO_DIN
         );
         return &audio_codec;
+    }
+
+    virtual Led* GetLed() override {
+        static SingleLed led(BUILTIN_LED_GPIO);
+        return &led;
     }
 };
 

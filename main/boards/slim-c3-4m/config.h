@@ -19,4 +19,7 @@
 // Boot button (on-board)
 #define BOOT_BUTTON_GPIO GPIO_NUM_9
 
+// Status LED (D4 on Luat ESP32-C3 CORE board)
+#define BUILTIN_LED_GPIO GPIO_NUM_12
+
 #endif // _BOARD_CONFIG_H_
