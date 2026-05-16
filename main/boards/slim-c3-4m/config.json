@@ -1,0 +1,14 @@
+{
+    "target": "esp32c3",
+    "builds": [
+        {
+            "name": "slim-c3-4m",
+            "sdkconfig_append": [
+                "CONFIG_ESP_WIFI_ENTERPRISE_SUPPORT=n",
+                "CONFIG_LWIP_IPV6=n",
+                "CONFIG_USE_ESP_WAKE_WORD=y",
+                "CONFIG_FLASH_DEFAULT_ASSETS=y"
+            ]
+        }
+    ]
+}
