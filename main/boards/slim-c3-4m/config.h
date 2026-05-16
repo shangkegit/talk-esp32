@@ -3,8 +3,8 @@
 
 #include <driver/gpio.h>
 
-#define AUDIO_INPUT_SAMPLE_RATE  16000
-#define AUDIO_OUTPUT_SAMPLE_RATE 16000
+#define AUDIO_INPUT_SAMPLE_RATE  24000
+#define AUDIO_OUTPUT_SAMPLE_RATE 24000
 
 // MAX98357 (Speaker output) - I2S bus 1
 #define SPK_I2S_GPIO_BCLK GPIO_NUM_4
