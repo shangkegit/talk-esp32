@@ -58,25 +58,34 @@ void CameraDisplay::DisplayTask(void *arg)
             continue;
         }
 
-        // 5. 复制帧数据到预览缓冲区
-        memcpy(preview_data, fb->buf, data_size);
+        // 5. 保存帧尺寸（释放后不再访问 fb）
+        int frame_width = fb->width;
+        int frame_height = fb->height;
 
-        // 6. 释放帧缓冲
+        // 6. 复制帧数据到预览缓冲区，做 RGB565 字节交换
+        size_t pixel_count = data_size / 2;
+        uint16_t *src = (uint16_t *)fb->buf;
+        uint16_t *dst = (uint16_t *)preview_data;
+        for (size_t i = 0; i < pixel_count; i++) {
+            dst[i] = __builtin_bswap16(src[i]);
+        }
+
+        // 7. 尽快释放帧缓冲
         esp_camera_fb_return(fb);
 
-        // 7. 创建 LvglAllocatedImage 并显示
+        // 8. 创建 LvglAllocatedImage 并显示
         auto image = std::make_unique<LvglAllocatedImage>(
             preview_data,
             data_size,
-            fb->width,
-            fb->height,
-            fb->width * 2,  // stride = width * 2 for RGB565
+            frame_width,
+            frame_height,
+            frame_width * 2,  // stride = width * 2 for RGB565
             LV_COLOR_FORMAT_RGB565
         );
 
         instance->display_->SetPreviewImage(std::move(image));
 
-        // 8. 控制帧率（约 15fps，避免 CPU 占用过高）
+        // 9. 控制帧率（约 15fps，避免 CPU 占用过高）
         vTaskDelay(pdMS_TO_TICKS(66));
     }
 

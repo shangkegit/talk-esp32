@@ -149,7 +149,7 @@ private:
         config.pixel_format = PIXFORMAT_RGB565;
         config.frame_size = FRAMESIZE_VGA;
         config.jpeg_quality = 12;
-        config.fb_count = 1;
+        config.fb_count = 2;
         config.fb_location = CAMERA_FB_IN_PSRAM;
         config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
         camera_ = new Esp32Camera(config);
