@@ -240,10 +240,11 @@ public:
     }
 
     virtual Camera* GetCamera() override {
-    virtual void PauseCameraPreview() override { if (camera_display_) camera_display_->Pause(); }
-    virtual void ResumeCameraPreview() override { if (camera_display_) camera_display_->Resume(); }
         return camera_;
     }
+
+    virtual void PauseCameraPreview() override { if (camera_display_) camera_display_->Pause(); }
+    virtual void ResumeCameraPreview() override { if (camera_display_) camera_display_->Resume(); }
 };
 
 DECLARE_BOARD(CompactWifiBoardS3Cam);
