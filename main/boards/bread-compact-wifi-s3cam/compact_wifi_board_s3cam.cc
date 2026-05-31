@@ -9,6 +9,7 @@
 #include "lamp_controller.h"
 #include "led/single_led.h"
 #include "esp32_camera.h"
+#include "camera_display.h"
 
 #include <esp_log.h>
 #include <driver/i2c_master.h>
@@ -62,10 +63,11 @@ static const gc9a01_lcd_init_cmd_t gc9107_lcd_init_cmds[] = {
 
 class CompactWifiBoardS3Cam : public WifiBoard {
 private:
- 
+
     Button boot_button_;
     LcdDisplay* display_;
     Esp32Camera* camera_;
+    CameraDisplay* camera_display_;
 
     void InitializeSpi() {
         spi_bus_config_t buscfg = {};
@@ -167,7 +169,8 @@ private:
 
 public:
     CompactWifiBoardS3Cam() :
-        boot_button_(BOOT_BUTTON_GPIO) {
+        boot_button_(BOOT_BUTTON_GPIO),
+        camera_display_(nullptr) {
         InitializeSpi();
         InitializeLcdDisplay();
         InitializeButtons();
@@ -175,7 +178,37 @@ public:
         if (DISPLAY_BACKLIGHT_PIN != GPIO_NUM_NC) {
             GetBacklight()->RestoreBrightness();
         }
-        
+
+        // 初始化相机实时显示
+        if (camera_ != nullptr && display_ != nullptr)
+        {
+            camera_display_ = new CameraDisplay(camera_, display_);
+            if (!camera_display_->Start())
+            {
+                ESP_LOGE(TAG, "Failed to start camera display");
+                delete camera_display_;
+                camera_display_ = nullptr;
+            }
+            else
+            {
+                ESP_LOGI(TAG, "Camera display started successfully");
+            }
+        }
+        else
+        {
+            ESP_LOGE(TAG, "Camera or LCD display not initialized");
+        }
+    }
+
+    // 析构函数 - 清理相机显示
+    ~CompactWifiBoardS3Cam()
+    {
+        if (camera_display_)
+        {
+            camera_display_->Stop();
+            delete camera_display_;
+            camera_display_ = nullptr;
+        }
     }
 
     virtual Led* GetLed() override {
